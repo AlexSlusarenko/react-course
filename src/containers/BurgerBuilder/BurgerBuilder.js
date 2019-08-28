@@ -15,12 +15,13 @@ class BurgerBuilder extends Component {
 
   state = {
     ingredients: {
-      salad: 1,
-      bacon: 1,
-      cheese: 2,
-      meat: 2
+      salad: 0,
+      bacon: 0,
+      cheese: 0,
+      meat: 0
     },
     totalPrice: 4,
+    purchasable: false,
   };
 
   addIngredientHandler = (type) => {
@@ -37,6 +38,7 @@ class BurgerBuilder extends Component {
     this.setState({
       totalPrice: newPrice,
       ingredients: updatedIngredients,
+      purchasable: true,
     })
   };
 
@@ -57,6 +59,11 @@ class BurgerBuilder extends Component {
     this.setState({
       totalPrice: newPrice,
       ingredients: updatedIngredients,
+      purchasable:
+        updatedIngredients.salad > 0
+        || updatedIngredients.meat > 0
+        || updatedIngredients.cheese > 0
+        || updatedIngredients.bacon > 0
     })
   };
 
@@ -72,6 +79,7 @@ class BurgerBuilder extends Component {
       <Aux>
         <Burger ingredients={this.state.ingredients}/>
         <BuildControls
+          purchasable={this.state.purchasable}
           price={this.state.totalPrice}
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
