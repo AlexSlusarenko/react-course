@@ -46,29 +46,40 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    this.setState({loading: true});
+    const queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+    }
+    const queryString = queryParams.join('&');
 
-    const order = {
-      ingredients: this.state.ingredients,
-      price: this.state.totalPrice, //not a setup for real app
-      customer: {
-        name: 'Alex',
-        email: 'test@test.com',
-        address: {
-          street: 'street 1'
-        }
-      },
-      deliveryMethod: 'fastest',
-    };
-    axiosOrders.post('/orders.json', order)
-      .then(response => {
-        console.log(response);
-        this.setState({loading: false, purchasing: false});
-      })
-      .catch(error => {
-        console.log(error);
-        this.setState({loading: false, purchasing: false});
-      });
+    this.props.history.push({
+      pathname: '/checkout',
+      search: '?' + queryString,
+    });
+
+    /*    this.setState({loading: true});
+
+        const order = {
+          ingredients: this.state.ingredients,
+          price: this.state.totalPrice, //not a setup for real app
+          customer: {
+            name: 'Alex',
+            email: 'test@test.com',
+            address: {
+              street: 'street 1'
+            }
+          },
+          deliveryMethod: 'fastest',
+        };
+        axiosOrders.post('/orders.json', order)
+          .then(response => {
+            console.log(response);
+            this.setState({loading: false, purchasing: false});
+          })
+          .catch(error => {
+            console.log(error);
+            this.setState({loading: false, purchasing: false});
+          });*/
   };
 
   addIngredientHandler = (type) => {
@@ -122,7 +133,7 @@ class BurgerBuilder extends Component {
       enabledControls[key] = enabledControls[key] > 0;
     }
     let orderSummary = null;
-    let burger = this.state.error? <p>{this.state.error.message}</p> : <Spinner/>;
+    let burger = this.state.error ? <p>{this.state.error.message}</p> : <Spinner/>;
 
     if (this.state.ingredients) {
       orderSummary = <OrderSummary
